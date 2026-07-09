@@ -10,6 +10,7 @@ namespace InvestTrack.Profiles
         {
             CreateMap<CriarInvestimentoDto, Investimento>();
             CreateMap<Investimento, DetalhesCriacaoInvestimentoDto>();
+            CreateMap<Investimento, InvestimentoResumoDto>();
         }
     }
 }

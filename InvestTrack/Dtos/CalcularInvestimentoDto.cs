@@ -3,5 +3,6 @@
     public class CalcularInvestimentoDto
     {
         public decimal ValorTotalCarteira;
+
     }
 }

@@ -4,6 +4,7 @@ using InvestTrack.Dtos;
 using InvestTrack.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading.Tasks;
 
 namespace InvestTrack.Service
 {
@@ -28,6 +29,22 @@ namespace InvestTrack.Service
             var detalhesDto = _mapper.Map<DetalhesCriacaoCarteiraDto>(carteira);
             return detalhesDto;
 
+        }
+
+        public async Task<RetornarCarteiraPorIDDto> BuscarCarteiraPorId(int carteiraId)
+        {
+            var carteira =  _context.Carteiras
+                .Include(c => c.Investimentos)
+                .FirstOrDefault(c => c.Id == carteiraId);
+            if (carteira == null)
+            {
+                throw new Exception("Carteira não encontrada");
+            }
+            var valor = await CalcularValorTotalCarteira(carteiraId);
+            var dto = _mapper.Map<RetornarCarteiraPorIDDto>(carteira);
+            dto.ValorTotalCarteira = valor.ValorTotalCarteira;
+
+            return dto;
         }
 
         public async Task<CalcularInvestimentoDto> CalcularValorTotalCarteira(int id)

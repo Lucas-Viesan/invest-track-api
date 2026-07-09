@@ -1,6 +1,7 @@
 ﻿using InvestTrack.Dtos;
 using InvestTrack.Service;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace InvestTrack.Controllers
 {
@@ -22,10 +23,21 @@ namespace InvestTrack.Controllers
             return Created();
         }
 
-        [HttpDelete]
-        public IActionResult ExcluirCarteira(int id)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> BuscarCarteira([FromBody]int carteiraId)
         {
-            _service.Excluir(id);
+           var carteira = await _service.BuscarCarteiraPorId(carteiraId);
+            if (carteira == null) 
+            {
+                return NotFound();
+            }
+           return Ok(carteira);
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult ExcluirCarteira([FromBody] int carteiraId)
+        {
+            _service.Excluir(carteiraId);
             return NoContent();
         }
     }

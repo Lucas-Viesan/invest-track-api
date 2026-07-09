@@ -23,5 +23,36 @@ namespace InvestTrack.Controllers
 
             return Created("", investimento);
         }
+
+        [HttpGet("{id}")]
+        public IActionResult GetInvestimento(int id) 
+        { 
+            var investimento = _service.RecuperarInvestimentoPorId(id);
+            if (investimento == null)
+            {
+                return NotFound();
+            }
+            return Ok(investimento);
+        }
+
+
+        [HttpPut("{id}")]
+        public IActionResult PutInvestimentos([FromBody] int invest, AtualizaInvestimentoDto atualizacao)
+        {
+            var investimento = _service.AtualizarInvestimento(invest, atualizacao);
+            if (investimento != null) {
+                return Ok(investimento);
+            }
+            return NotFound();
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteInvestimentos([FromBody] int invest)
+        {
+           _service.DeletarInvestimento(invest);
+            return NoContent();
+        }
+
+
     }
 }

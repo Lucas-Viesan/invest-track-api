@@ -37,8 +37,10 @@ namespace InvestTrack.Service
                 throw new Exception("Esse ativo já existe na carteira.");
 
             VerificaValorAplicado(dto);
+      
 
             investimento.DataCompra = DateTime.UtcNow;
+            investimento.ValorAtual = investimento.ValorAplicado;
             _context.Investimentos.Add(investimento);
             await _context.SaveChangesAsync();
             var detalhesDto = _mapper.Map<DetalhesCriacaoInvestimentoDto>(investimento);
@@ -55,15 +57,51 @@ namespace InvestTrack.Service
             }
         }
 
-        public void VerificaValorAtual(CriarInvestimentoDto dto)
+        public InvestimentoResumoDto RecuperarInvestimentoPorId(int invest)
         {
-            Investimento investimento = _mapper.Map<Investimento>(dto);
-            investimento.ValorAtual = investimento.ValorAtual + investimento.ValorAplicado;
-            if (investimento.ValorAplicado < 0)
+            var investimento = _context.Investimentos.FirstOrDefault(i => i.Id == invest);
+            if (investimento == null)
             {
-                throw new Exception("Valor atual nunca pode ser negativo");
-
+                throw new Exception("Investimento não encontrado");
             }
+            InvestimentoResumoDto dto = _mapper.Map<InvestimentoResumoDto>(investimento);
+
+            return dto;
+        }
+
+        public InvestimentoResumoDto AtualizarInvestimento(int invest, AtualizaInvestimentoDto atualizacao)
+        {
+            var investimento = _context.Investimentos.FirstOrDefault(i => i.Id == invest);
+            if (investimento == null)
+            {
+                throw new Exception("Investimento não encontrado");
+            }
+            VerificaValorAtual(atualizacao);
+            investimento.ValorAtual = atualizacao.ValorAtual;
+            _context.SaveChanges();
+
+            InvestimentoResumoDto dto = _mapper.Map<InvestimentoResumoDto>(investimento);
+            
+            return dto;
+        }
+
+        public void VerificaValorAtual(AtualizaInvestimentoDto atualizacao)
+        {
+            if(atualizacao.ValorAtual < 0)
+            {
+                throw new Exception("Valor atual não pode ser negativo");
+            }
+        }
+
+        public void DeletarInvestimento(int invest)
+        {
+            var investimento = _context.Investimentos.FirstOrDefault(i => i.Id == invest);
+            if(investimento == null)
+            {
+                throw new Exception("Investimento não encontrado");
+            }
+            _context.Investimentos.Remove(investimento);
+            _context.SaveChanges();
         }
     }
 }
