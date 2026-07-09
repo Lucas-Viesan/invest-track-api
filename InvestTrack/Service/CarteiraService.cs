@@ -2,6 +2,8 @@
 using InvestTrack.Context;
 using InvestTrack.Dtos;
 using InvestTrack.Models;
+using Microsoft.EntityFrameworkCore;
+using System.Security.Cryptography.X509Certificates;
 
 namespace InvestTrack.Service
 {
@@ -28,6 +30,18 @@ namespace InvestTrack.Service
 
         }
 
+        public async Task<CalcularInvestimentoDto> CalcularValorTotalCarteira(int id)
+        {
+            CalcularInvestimentoDto calcularInvestimentoDto = new CalcularInvestimentoDto();
+            
+            decimal valorTotal = await _context.Investimentos
+                .Where(i => i.CarteiraId == id)
+                .SumAsync(i => i.ValorAtual);
+
+            calcularInvestimentoDto.ValorTotalCarteira = valorTotal;
+
+            return calcularInvestimentoDto;
+        }
 
         public void Excluir(int id)
         {

@@ -57,13 +57,13 @@ namespace InvestTrack.Service
 
         public void VerificaValorAtual(CriarInvestimentoDto dto)
         {
-            dto.ValorAplicado = 0 + dto.ValorAplicado;
-
-            if(dto.ValorAplicado < 0)
+            Investimento investimento = _mapper.Map<Investimento>(dto);
+            investimento.ValorAtual = investimento.ValorAtual + investimento.ValorAplicado;
+            if (investimento.ValorAplicado < 0)
             {
-                throw new Exception("Valor atual nunca pode ser negativo");  
+                throw new Exception("Valor atual nunca pode ser negativo");
 
+            }
         }
-
     }
 }
