@@ -37,7 +37,7 @@ namespace InvestTrack.Controllers
 
 
         [HttpPut("{id}")]
-        public IActionResult PutInvestimentos([FromBody] int invest, AtualizaInvestimentoDto atualizacao)
+        public IActionResult PutInvestimentos( int invest, [FromBody] AtualizaInvestimentoDto atualizacao)
         {
             var investimento = _service.AtualizarInvestimento(invest, atualizacao);
             if (investimento != null) {
@@ -47,9 +47,9 @@ namespace InvestTrack.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteInvestimentos([FromBody] int invest)
+        public IActionResult DeleteInvestimentos( int id)
         {
-           _service.DeletarInvestimento(invest);
+           _service.DeletarInvestimento(id);
             return NoContent();
         }
 

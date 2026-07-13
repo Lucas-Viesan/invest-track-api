@@ -24,9 +24,9 @@ namespace InvestTrack.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> BuscarCarteira([FromBody]int carteiraId)
+        public async Task<IActionResult> BuscarCarteira(int id)
         {
-           var carteira = await _service.BuscarCarteiraPorId(carteiraId);
+           var carteira = await _service.BuscarCarteiraPorId(id);
             if (carteira == null) 
             {
                 return NotFound();
@@ -35,9 +35,9 @@ namespace InvestTrack.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult ExcluirCarteira([FromBody] int carteiraId)
+        public async Task<IActionResult> ExcluirCarteira(int id)
         {
-            _service.Excluir(carteiraId);
+            await _service.Excluir(id);
             return NoContent();
         }
     }

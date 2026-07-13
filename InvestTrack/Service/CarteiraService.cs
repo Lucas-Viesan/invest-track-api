@@ -31,16 +31,16 @@ namespace InvestTrack.Service
 
         }
 
-        public async Task<RetornarCarteiraPorIDDto> BuscarCarteiraPorId(int carteiraId)
+        public async Task<RetornarCarteiraPorIDDto> BuscarCarteiraPorId(int id)
         {
             var carteira =  _context.Carteiras
                 .Include(c => c.Investimentos)
-                .FirstOrDefault(c => c.Id == carteiraId);
+                .FirstOrDefault(c => c.Id == id);
             if (carteira == null)
             {
                 throw new Exception("Carteira não encontrada");
             }
-            var valor = await CalcularValorTotalCarteira(carteiraId);
+            var valor = await CalcularValorTotalCarteira(id);
             var dto = _mapper.Map<RetornarCarteiraPorIDDto>(carteira);
             dto.ValorTotalCarteira = valor.ValorTotalCarteira;
 
@@ -60,21 +60,24 @@ namespace InvestTrack.Service
             return calcularInvestimentoDto;
         }
 
-        public void Excluir(int id)
+        public async Task Excluir(int id)
         {
-            var carteira = _context.Carteiras.FirstOrDefault(carteira => carteira.Id == id);
+            var carteira = await _context.Carteiras
+                .Include(c => c.Investimentos)
+                .FirstOrDefaultAsync(c => c.Id == id);
+
             if (carteira == null)
             {
-                throw new Exception("Carteira não encontrada");
+                throw new Exception("Carteira não encontrada.");
             }
-            var investimento = carteira.Investimentos.FirstOrDefault(investimento => investimento.Id == id);
-            if (investimento == null)
-            {
-                _context.Carteiras.Remove(carteira);
-                _context.SaveChanges();
-            }
-            throw new Exception("Só será possível excluir a carteira, caso não haja invvestimentos associados");
 
+            if (carteira.Investimentos.Any())
+            {
+                throw new Exception("Só será permitido excluir a carteira caso não tenha investimentos associados.");
+            }
+
+            _context.Carteiras.Remove(carteira);
+            await _context.SaveChangesAsync();
         }
     }
 }
