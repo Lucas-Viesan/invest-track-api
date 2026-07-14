@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("InvestTrack")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7002d64e50e907a1daa0001331aa68742e932e8e")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+af7af22d33db2a6e270f31ef415b8aaef7b3dbd4")]
 [assembly: System.Reflection.AssemblyProductAttribute("InvestTrack")]
 [assembly: System.Reflection.AssemblyTitleAttribute("InvestTrack")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
